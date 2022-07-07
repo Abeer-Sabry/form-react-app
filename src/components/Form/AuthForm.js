@@ -1,21 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 // ---Formik
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 // ---- Reusable-Component
 import FormField from "../../reusableComponents/FormField";
 import SelectField from "../../reusableComponents/SelectField";
-
 // --- Firebase
 import { auth } from "../../firebase";
-import { FacebookAuthProvider, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  FacebookAuthProvider,
+  signInWithPopup,
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserInfo } from "../../Redux/userEmailAndPassSlice";
 
 const AuthForm = () => {
+  const { userInfo } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+
+  const [user, setUser] = useState({});
+
   const signUpWithFacebook = () => {
     const provider = new FacebookAuthProvider();
     signInWithPopup(auth, provider)
-      .then(response => {
-        console.log("response", response);
+      .then(re => {
+        // const user = result;
+        console.log("response", re);
       })
       .catch(err => {
         console.log("err", err);
@@ -24,13 +36,16 @@ const AuthForm = () => {
   const signUpWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then(response => {
-        console.log("response", response);
+      .then(result => {
+        const user = result.user;
+        setUser(user);
+        console.log("response", user);
       })
       .catch(err => {
         console.log("err", err);
       });
   };
+
   // useEffect(() => {}, []);
   // Select-Options-Arr
   const optionsArr = ["select an option", "html", "css", "javascript", "React js", "Redux"];
@@ -54,10 +69,13 @@ const AuthForm = () => {
     firstName: Yup.string()
       .max(15, "Must be 15 characters or less")
       .required("FirstName Is Required"),
+    middleName: Yup.string()
+      .max(15, "Must be 15 characters or less")
+      .required("middleName Is Required"),
     lastName: Yup.string()
       .max(20, "Must be 20 characters or less")
-      .required("MiddleName Is Required"),
-    email: Yup.string().email("Invalid email address").required("LastName Is Required"),
+      .required("lastName Is Required"),
+    email: Yup.string().email("Invalid email address").required("email Is Required"),
     phoneNumber: Yup.number().required("PhoneNumber Is Required").positive().integer(),
     nationalID: Yup.number().required(" NationalID Is Required").positive().integer(),
     addressOne: Yup.string().required(" Address1 Is Required"),
@@ -74,10 +92,11 @@ const AuthForm = () => {
         validationSchema={validationSchema}
         onSubmit={values => {
           console.log("values", values);
+          dispatch(getUserInfo(values));
         }}
       >
         <Form>
-          <FormField name="firstName" type="text" />
+          <FormField name="firstName" type="text" value={user && user.displayName} />
           <FormField name="middleName" type="text" />
           <FormField name="lastName" type="text" />
           <div className="formDetails">
@@ -88,7 +107,7 @@ const AuthForm = () => {
               <FormField name="nationalID" type="text" />
             </div>
           </div>
-          <FormField name="email" type="email" />
+          <FormField name="email" type="email" value={user && user.email} />
           <div className="formDetails">
             <div>
               <FormField name="addressOne" type="text" />
