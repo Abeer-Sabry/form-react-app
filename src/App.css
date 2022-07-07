@@ -3,27 +3,37 @@
   margin: 0;
   box-sizing: border-box;
 }
-
+img {
+  width: 100%;
+}
 .header {
-  background-color: #5433ff;
+  background: linear-gradient(to right, #5d26c1, #a17fe0, #77b4fa);
   display: flex;
   justify-content: space-between;
   color: white;
   padding: 20px 30px;
   font-size: 20px;
-  margin-bottom: 100px;
+}
+.appContainer {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
 }
 .formContainer {
-  width: 40%;
-  margin: 0 auto;
+  width: 100%;
+  padding: 30px 50px;
   margin-bottom: 50px;
+  background-color: rgba(129, 64, 255, 0.08);
 }
 .formDetails {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 20px;
 }
-
+.namesDiv {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 20px;
+}
 label {
   color: #5433ff;
   font-weight: 600;
@@ -33,16 +43,18 @@ label {
 }
 .formInput {
   width: 100%;
-  padding: 10px;
+  padding: 15px 10px;
+  background-color: rgba(129, 64, 255, 0.1);
   border-radius: 10px;
-  border: 1.5px solid #3e24be;
-  color: darkslategrey;
+  border: none;
+  color: black;
 }
 select {
   background-color: white;
   color: darkslategrey;
   text-transform: capitalize;
 }
+
 .errorMsg {
   color: red;
   font-size: 11px;
@@ -50,11 +62,27 @@ select {
   margin-bottom: 15px;
 }
 button {
-  background-color: #5433ff;
+  background-color: #5d26c1;
   color: white;
   border: none;
   border-radius: 10px;
   padding: 10px 30px;
-  font-size: 15px;
+  font-size: 16px;
   margin-top: 12px;
+}
+.socialButton {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 20px;
+  margin-top: 50px;
+}
+.socialButton button {
+  font-size: 15px;
+  text-transform: capitalize;
+}
+.socialButton button:nth-child(1) {
+  background-color: #4267b2;
+}
+.socialButton button:nth-child(2) {
+  background-color: rgb(183, 1, 1);
 }

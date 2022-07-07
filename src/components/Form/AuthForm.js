@@ -6,12 +6,15 @@ import * as Yup from "yup";
 import FormField from "../../reusableComponents/FormField";
 import SelectField from "../../reusableComponents/SelectField";
 // --- Firebase
-import { auth } from "../../firebase";
+import { auth, collRef } from "../../firebase";
+import { addDoc } from "firebase/firestore";
+
 import {
   FacebookAuthProvider,
   signInWithPopup,
   GoogleAuthProvider,
-  createUserWithEmailAndPassword,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
 } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo } from "../../Redux/userEmailAndPassSlice";
@@ -44,6 +47,13 @@ const AuthForm = () => {
       .catch(err => {
         console.log("err", err);
       });
+  };
+
+  const requestOTP = number => {
+    const recaptchaVerifier = new RecaptchaVerifier("recaptcha-container", {}, auth);
+    recaptchaVerifier.render();
+    let appVerifier = window.recaptchaVerifier;
+    signInWithPhoneNumber(auth, number, appVerifier);
   };
 
   // useEffect(() => {}, []);
@@ -92,39 +102,40 @@ const AuthForm = () => {
         validationSchema={validationSchema}
         onSubmit={values => {
           console.log("values", values);
+          addDoc(collRef, values);
           dispatch(getUserInfo(values));
         }}
       >
         <Form>
-          <FormField name="firstName" type="text" value={user && user.displayName} />
-          <FormField name="middleName" type="text" />
-          <FormField name="lastName" type="text" />
+          <div className="namesDiv">
+            <FormField name="firstName" type="text" value={user && user.displayName} />
+            <FormField name="middleName" type="text" />
+            <FormField name="lastName" type="text" />
+          </div>
           <div className="formDetails">
-            <div>
-              <FormField name="phoneNumber" type="text" />
-            </div>
-            <div>
-              <FormField name="nationalID" type="text" />
-            </div>
+            <FormField name="phoneNumber" type="text" />
+            <FormField name="nationalID" type="text" />
           </div>
           <FormField name="email" type="email" value={user && user.email} />
           <div className="formDetails">
-            <div>
-              <FormField name="addressOne" type="text" />
-            </div>
-            <div>
-              <FormField name="addressTwo" type="text" />
-            </div>
+            <FormField name="addressOne" type="text" />
+            <FormField name="addressTwo" type="text" />
           </div>
           <FormField name="linkedIn" type="text" />
-          <FormField name="twitter" type="text" />
-          <FormField name="facebook" type="text" />
+          <div className="formDetails">
+            <FormField name="twitter" type="text" />
+            <FormField name="facebook" type="text" />
+          </div>
           <SelectField name="courses" type="" options={optionsArr} />
-          <button type="submit">Submit</button>
+          <div style={{ textAlign: "right" }}>
+            <button type="submit">Submit</button>
+          </div>
         </Form>
       </Formik>
-      <button onClick={signUpWithFacebook}>signUpWithFacebook</button>
-      <button onClick={signUpWithGoogle}> signUpWithGoogle</button>
+      <div className="socialButton">
+        <button onClick={signUpWithFacebook}>signUp With Facebook</button>
+        <button onClick={signUpWithGoogle}> signUp With Google</button>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { Field, ErrorMessage } from "formik";
 const FormField = props => {
   return (
-    <>
+    <div>
       <label htmlFor={props.name}>{props.name}</label>
       <Field
         name={props.name}
@@ -14,7 +14,7 @@ const FormField = props => {
       <div className="errorMsg">
         <ErrorMessage name={props.name} component={"div"} />
       </div>
-    </>
+    </div>
   );
 };
 
