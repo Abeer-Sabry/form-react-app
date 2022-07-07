@@ -8,7 +8,7 @@ import SelectField from "../../reusableComponents/SelectField";
 // --- Firebase
 import { auth, collRef } from "../../firebase";
 import { addDoc } from "firebase/firestore";
-
+// ---Firebase-auth
 import {
   FacebookAuthProvider,
   signInWithPopup,
@@ -16,14 +16,21 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "firebase/auth";
+// ---- Redux
 import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo } from "../../Redux/userEmailAndPassSlice";
+// ---- React-Icons
+import { FaGoogle, FaFacebookF } from "react-icons/fa";
+import { async } from "@firebase/util";
 
 const AuthForm = () => {
   const { userInfo } = useSelector(state => state.user);
+  console.log("state", userInfo);
   const dispatch = useDispatch();
 
   const [user, setUser] = useState({});
+  const [otp, setOtp] = useState("");
+  const [verify, setVerify] = useState(false);
 
   const signUpWithFacebook = () => {
     const provider = new FacebookAuthProvider();
@@ -49,11 +56,34 @@ const AuthForm = () => {
       });
   };
 
-  const requestOTP = number => {
-    const recaptchaVerifier = new RecaptchaVerifier("recaptcha-container", {}, auth);
-    recaptchaVerifier.render();
-    let appVerifier = window.recaptchaVerifier;
-    signInWithPhoneNumber(auth, number, appVerifier);
+  const generateRecaptcha = () => {
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: response => {},
+      },
+      auth
+    );
+  };
+
+  const requestOTP = async () => {
+    await generateRecaptcha();
+    let appVerifier = window.appVerifier;
+    const phoneNumber = userInfo && userInfo.phoneNumber;
+    console.log("number", phoneNumber);
+    await signInWithPhoneNumber(auth, +phoneNumber, appVerifier)
+      .then(confirmationResult => {
+        console.log(confirmationResult);
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        // user in with confirmationResult.confirm(code).
+        window.confirmationResult = confirmationResult;
+        setVerify(true);
+        // ...
+      })
+      .catch(error => {
+        console.log("err", error);
+      });
   };
 
   // useEffect(() => {}, []);
@@ -132,9 +162,44 @@ const AuthForm = () => {
           </div>
         </Form>
       </Formik>
+      {/*    verification-section */}
+      {userInfo && (
+        <div id="recaptcha-container">
+          <h2 style={{ marginBottom: "10px" }}>verify your phoneNumber</h2>
+          <input
+            style={{
+              width: "100%",
+              padding: "15px 10px",
+            }}
+            type="text"
+            value={userInfo.phoneNumber}
+          />
+          {verify && (
+            <input
+              style={{
+                width: "100%",
+                padding: "15px 10px",
+              }}
+              type="text"
+              value={otp}
+            />
+          )}
+          <button onClick={requestOTP}>requestOTP</button>
+        </div>
+      )}
       <div className="socialButton">
-        <button onClick={signUpWithFacebook}>signUp With Facebook</button>
-        <button onClick={signUpWithGoogle}> signUp With Google</button>
+        <button onClick={signUpWithFacebook}>
+          <span>
+            <FaFacebookF />
+          </span>{" "}
+          signUp With Facebook
+        </button>
+        <button onClick={signUpWithGoogle}>
+          <span>
+            <FaGoogle />
+          </span>{" "}
+          signUp With Google
+        </button>
       </div>
     </div>
   );

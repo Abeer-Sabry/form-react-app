@@ -22,7 +22,7 @@ img {
   width: 100%;
   padding: 30px 50px;
   margin-bottom: 50px;
-  background-color: rgba(129, 64, 255, 0.08);
+  background-color: rgba(129, 64, 255, 0.05);
 }
 .formDetails {
   display: grid;
@@ -44,7 +44,8 @@ label {
 .formInput {
   width: 100%;
   padding: 15px 10px;
-  background-color: rgba(129, 64, 255, 0.1);
+  /* background-color: rgba(129, 64, 255, 0.2); */
+  background-color: rgba(93, 38, 193, 0.1);
   border-radius: 10px;
   border: none;
   color: black;
@@ -65,20 +66,21 @@ button {
   background-color: #5d26c1;
   color: white;
   border: none;
-  border-radius: 10px;
-  padding: 10px 30px;
-  font-size: 16px;
+  border-radius: 15px;
+  padding: 10px 70px;
+  font-size: 17px;
   margin-top: 12px;
 }
 .socialButton {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-column-gap: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin-top: 50px;
 }
 .socialButton button {
   font-size: 15px;
   text-transform: capitalize;
+  margin-bottom: 5px;
 }
 .socialButton button:nth-child(1) {
   background-color: #4267b2;
