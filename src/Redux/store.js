@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import social from "./socialSlice";
-import user from "./userEmailAndPassSlice";
+import user from "./userslice";
 const store = configureStore({
   reducer: {
     social,

@@ -9,85 +9,38 @@ import SelectField from "../../reusableComponents/SelectField";
 import { auth, collRef } from "../../firebase";
 import { addDoc } from "firebase/firestore";
 // ---Firebase-auth
-import {
-  FacebookAuthProvider,
-  signInWithPopup,
-  GoogleAuthProvider,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-} from "firebase/auth";
+import { FacebookAuthProvider, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 // ---- Redux
-import { useDispatch, useSelector } from "react-redux";
-import { getUserInfo } from "../../Redux/userEmailAndPassSlice";
+import { useDispatch } from "react-redux";
+import { getUserInfo, showPopUp } from "../../Redux/userslice";
 // ---- React-Icons
 import { FaGoogle, FaFacebookF } from "react-icons/fa";
-import { async } from "@firebase/util";
 
 const AuthForm = () => {
-  const { userInfo } = useSelector(state => state.user);
-  console.log("state", userInfo);
   const dispatch = useDispatch();
-
+  // Responsible-For-Holding-form-data
   const [user, setUser] = useState({});
-  const [otp, setOtp] = useState("");
-  const [verify, setVerify] = useState(false);
-
+  // FaceBook Register
   const signUpWithFacebook = () => {
     const provider = new FacebookAuthProvider();
     signInWithPopup(auth, provider)
-      .then(re => {
-        // const user = result;
-        console.log("response", re);
-      })
-      .catch(err => {
-        console.log("err", err);
-      });
+      .then(re => {})
+      .catch(err => {});
   };
+  //Google Register
   const signUpWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then(result => {
         const user = result.user;
         setUser(user);
-        console.log("response", user);
       })
       .catch(err => {
         console.log("err", err);
       });
   };
 
-  const generateRecaptcha = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: response => {},
-      },
-      auth
-    );
-  };
-
-  const requestOTP = async () => {
-    await generateRecaptcha();
-    let appVerifier = window.appVerifier;
-    const phoneNumber = userInfo && userInfo.phoneNumber;
-    console.log("number", phoneNumber);
-    await signInWithPhoneNumber(auth, +phoneNumber, appVerifier)
-      .then(confirmationResult => {
-        console.log(confirmationResult);
-        // SMS sent. Prompt user to type the code from the message, then sign the
-        // user in with confirmationResult.confirm(code).
-        window.confirmationResult = confirmationResult;
-        setVerify(true);
-        // ...
-      })
-      .catch(error => {
-        console.log("err", error);
-      });
-  };
-
-  // useEffect(() => {}, []);
-  // Select-Options-Arr
+  // Responsible-For-Select-Options-Arr
   const optionsArr = ["select an option", "html", "css", "javascript", "React js", "Redux"];
   // Values
   const initialValues = {
@@ -130,10 +83,12 @@ const AuthForm = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={values => {
+        onSubmit={(values, { resetForm }) => {
           console.log("values", values);
           addDoc(collRef, values);
           dispatch(getUserInfo(values));
+          dispatch(showPopUp());
+          resetForm();
         }}
       >
         <Form>
@@ -162,31 +117,7 @@ const AuthForm = () => {
           </div>
         </Form>
       </Formik>
-      {/*    verification-section */}
-      {userInfo && (
-        <div id="recaptcha-container">
-          <h2 style={{ marginBottom: "10px" }}>verify your phoneNumber</h2>
-          <input
-            style={{
-              width: "100%",
-              padding: "15px 10px",
-            }}
-            type="text"
-            value={userInfo.phoneNumber}
-          />
-          {verify && (
-            <input
-              style={{
-                width: "100%",
-                padding: "15px 10px",
-              }}
-              type="text"
-              value={otp}
-            />
-          )}
-          <button onClick={requestOTP}>requestOTP</button>
-        </div>
-      )}
+
       <div className="socialButton">
         <button onClick={signUpWithFacebook}>
           <span>

@@ -18,6 +18,13 @@ img {
   display: grid;
   grid-template-columns: 5fr 7fr;
 }
+/* Responsive */
+@media only screen and (max-width: 991px) {
+  .appContainer {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+/* Form-Style */
 .formContainer {
   width: 100%;
   padding: 30px 50px;
@@ -29,10 +36,22 @@ img {
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 20px;
 }
+/* Responsive */
+@media only screen and (max-width: 991px) {
+  .formDetails {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
 .namesDiv {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 20px;
+}
+/* Responsive */
+@media only screen and (max-width: 991px) {
+  .namesDiv {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 label {
   color: #5433ff;
@@ -44,7 +63,6 @@ label {
 .formInput {
   width: 100%;
   padding: 15px 10px;
-  /* background-color: rgba(129, 64, 255, 0.2); */
   background-color: rgba(93, 38, 193, 0.1);
   border-radius: 10px;
   border: none;
@@ -55,7 +73,6 @@ select {
   color: darkslategrey;
   text-transform: capitalize;
 }
-
 .errorMsg {
   color: red;
   font-size: 11px;
@@ -71,6 +88,7 @@ button {
   font-size: 17px;
   margin-top: 12px;
 }
+/* SocialMedia-Style */
 .socialButton {
   display: flex;
   flex-direction: column;
@@ -82,9 +100,43 @@ button {
   text-transform: capitalize;
   margin-bottom: 5px;
 }
+/* Responsive */
+@media only screen and (max-width: 415px) {
+  .socialButton button {
+    font-size: 12px;
+  }
+}
+@media only screen and (max-width: 372px) {
+  .socialButton button {
+    font-size: 11px;
+  }
+}
 .socialButton button:nth-child(1) {
   background-color: #4267b2;
 }
 .socialButton button:nth-child(2) {
   background-color: rgb(183, 1, 1);
+}
+/* verification-Style */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+.verifyDiv {
+  background-color: white;
+  padding: 30px 50px;
+}
+.verifyDiv input {
+  background-color: rgba(93, 38, 193, 0.1);
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 20px;
+  position: relative;
 }
