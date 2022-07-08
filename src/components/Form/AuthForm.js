@@ -84,7 +84,6 @@ const AuthForm = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { resetForm }) => {
-          console.log("values", values);
           addDoc(collRef, values);
           dispatch(getUserInfo(values));
           dispatch(showPopUp());
