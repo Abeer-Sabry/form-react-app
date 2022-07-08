@@ -12,9 +12,9 @@ consist of of
 
 -AuthForm component which contains 
    the main app form with validation which created by formik and Yup,
-   It contains signup with google and signup with facebook method,
    please Note when you enter your phone number with +2 pattern,
-   when you submit successfully the phoneNumber auth will be shown
+   when you submit successfully the phoneNumber auth will be shown,
+   It contains signup with google and signup with facebook methods
    
 -VerifyCard component which responsible for 
    phoneNumber Auth,
