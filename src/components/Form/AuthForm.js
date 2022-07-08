@@ -83,11 +83,11 @@ const AuthForm = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={(values, onSubmitProps) => {
           addDoc(collRef, values);
           dispatch(getUserInfo(values));
           dispatch(showPopUp());
-          resetForm();
+          onSubmitProps.resetForm();
         }}
       >
         <Form>
@@ -97,7 +97,7 @@ const AuthForm = () => {
             <FormField name="lastName" type="text" />
           </div>
           <div className="formDetails">
-            <FormField name="phoneNumber" type="text" />
+            <FormField name="phoneNumber" type="text" placeholder="please enter (+2) " />
             <FormField name="nationalID" type="text" />
           </div>
           <FormField name="email" type="email" value={user && user.email} />
@@ -112,7 +112,7 @@ const AuthForm = () => {
           </div>
           <SelectField name="courses" type="" options={optionsArr} />
           <div style={{ textAlign: "right" }}>
-            <button type="submit">Submit</button>
+            <button type="submit"> Submit</button>
           </div>
         </Form>
       </Formik>

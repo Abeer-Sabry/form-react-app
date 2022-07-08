@@ -8,6 +8,7 @@ const FormField = props => {
         name={props.name}
         className="formInput"
         type={props.type}
+        placeholder={props.placeholder}
         id={props.name}
         value={props.value}
       />

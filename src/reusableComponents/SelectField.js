@@ -7,7 +7,7 @@ const SelectField = ({ name, type, options }) => {
       <Field as="select" name={name} className="formInput" type={type} id={name}>
         {options.map(option => {
           return (
-            <option key={option.index} value={option}>
+            <option key={option} value={option}>
               {option}
             </option>
           );
